@@ -1,0 +1,76 @@
+[project]
+name = "fast-zero"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Domings Graciano"}
+]
+readme = "README.md"
+requires-python=">=3.12.7,<4.0"
+dependencies = [
+    "fastapi (>=0.115.12,<0.116.0)",
+]
+
+[tool.poetry]
+packages = [{include = "fast_zero", from = "src"}]
+
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.11.2"
+pytest = "^8.3.5"
+pytest-cov = "^6.0.0"
+httpx = "^0.28.1"
+taskipy = "^1.14.1"
+
+
+[tool.ruff]
+line-length=79
+extend-exclude = ['migrations']
+
+[tool.ruff.lint]
+preview = true
+select = ['I', 'F', 'E', 'W', 'PL', 'PT']
+
+[tool.ruff.format]
+preview = true
+quote-style = 'double'
+
+[tool.taskipy.tasks]
+run = "uvicorn src.fast_zero.app:app --reload"
+
+pre_test = "task lint"
+test = "poetry run pytest --cov=fast_zero -vv"
+post_test = "poetry run coverage html"
+
+lint    = "ruff check . && ruff check . --diff"
+format  = "ruff check . --fix && ruff format ."
+
+
+
+
+view_cov = "open htmlcov/index.html"  # Para macOS
+full_test = "pytest --cov=fast_zero -vv && coverage html"
+
+
+
+
+
+
+
+
+
+
+[tool.pytest.ini_options]
+pythonpath = "."
+addopts = "-p no:warnings"
+
+
+
+
+
+
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
